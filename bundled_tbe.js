@@ -11764,12 +11764,12 @@ module.exports = function () {
         //console.log(device)
         //device.innerHTML = "IS mobile"
         //console.log("IS mobile")
-        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -I-");
+        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -M-");
       } else {
         //const device = app.dots.getElementById("device-name-label")
         //console.log(device) 
         //device.innerHTML = "NOT mobile"
-        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -N-");
+        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -D-");
         //console.log("NOT Mobile")
       }
       this.svgText.setAttribute('id', 'device-name-label');
