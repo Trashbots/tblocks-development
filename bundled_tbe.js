@@ -11758,8 +11758,8 @@ module.exports = function () {
       dso.robotOnlyPos = buttonLeft + 35 * scale;
       this.svgDot = svgb.createRect('action-dot-bg', buttonLeft, y, buttonWidth, dotd, dotHalf);
       this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -?-");
-
-      if (window.MobileAccessibility) {
+      var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
         //const device = app.dots.getElementById("device-name-label")
         //console.log(device)
         //device.innerHTML = "IS mobile"
@@ -11767,7 +11767,7 @@ module.exports = function () {
         this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -I-");
       } else {
         //const device = app.dots.getElementById("device-name-label")
-        //console.log(device)
+        //console.log(device) 
         //device.innerHTML = "NOT mobile"
         this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -N-");
         //console.log("NOT Mobile")
