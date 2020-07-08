@@ -7393,6 +7393,8 @@ module.exports = function () {
       window.MobileAccessibility.usePreferredTextZoom(false);
     }
 
+    //device-name-label
+
     // Configuration components for the app and blocks
     // Initialize knockout databinding for documents DOM
     tbe.components = {};
@@ -11756,8 +11758,21 @@ module.exports = function () {
       dso.robotOnlyPos = buttonLeft + 35 * scale;
       this.svgDot = svgb.createRect('action-dot-bg', buttonLeft, y, buttonWidth, dotd, dotHalf);
       this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -?-");
-      this.svgText.setAttribute('id', 'device-name-label');
 
+      if (window.MobileAccessibility) {
+        //const device = app.dots.getElementById("device-name-label")
+        //console.log(device)
+        //device.innerHTML = "IS mobile"
+        //console.log("IS mobile")
+        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -I-");
+      } else {
+        //const device = app.dots.getElementById("device-name-label")
+        //console.log(device)
+        //device.innerHTML = "NOT mobile"
+        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -N-");
+        //console.log("NOT Mobile")
+      }
+      this.svgText.setAttribute('id', 'device-name-label');
       this.nameText = svgb.createText('fa fas action-dot-fatext', buttonCenter + buttonWidth / 6, y + dotd * 0.25 + fontSize / 3, "");
       this.nameText.setAttribute('id', 'actual-name-label');
 
