@@ -7392,14 +7392,15 @@ module.exports = function () {
     if (window.MobileAccessibility) {
       window.MobileAccessibility.usePreferredTextZoom(false);
     }
-    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); //Checks if mobile
     if (isMobile) {
       window.location.href = "http://tblocks.app.link";
-    } else {
-      window.location.href = "http://tblocks.app.link";
     }
-
-    //device-name-label
+    /*
+    else
+    {
+    	window.location.href = "http://tblocks.app.link"; //Testing purposes (redirects to trashbots.github.io)
+    }*/
 
     // Configuration components for the app and blocks
     // Initialize knockout databinding for documents DOM
@@ -11764,20 +11765,7 @@ module.exports = function () {
       dso.robotOnlyPos = buttonLeft + 35 * scale;
       this.svgDot = svgb.createRect('action-dot-bg', buttonLeft, y, buttonWidth, dotd, dotHalf);
       this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -?-");
-      var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        //const device = app.dots.getElementById("device-name-label")
-        //console.log(device)
-        //device.innerHTML = "IS mobile"
-        //console.log("IS mobile")
-        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -M-");
-      } else {
-        //const device = app.dots.getElementById("device-name-label")
-        //console.log(device) 
-        //device.innerHTML = "NOT mobile"
-        this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -D-");
-        //console.log("NOT Mobile")
-      }
+
       this.svgText.setAttribute('id', 'device-name-label');
       this.nameText = svgb.createText('fa fas action-dot-fatext', buttonCenter + buttonWidth / 6, y + dotd * 0.25 + fontSize / 3, "");
       this.nameText.setAttribute('id', 'actual-name-label');
