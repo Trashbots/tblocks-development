@@ -7394,9 +7394,9 @@ module.exports = function () {
     }
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
-      window.location.href = "tblocks.app.link";
+      window.location.href = "http://tblocks.app.link";
     } else {
-      window.location.href = "tblocks.app.link";
+      window.location.href = "http://tblocks.app.link";
     }
 
     //device-name-label
