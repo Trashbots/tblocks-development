@@ -7392,6 +7392,12 @@ module.exports = function () {
     if (window.MobileAccessibility) {
       window.MobileAccessibility.usePreferredTextZoom(false);
     }
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = "http://www.w3schools.com";
+    } else {
+      window.location.href = "http://www.google.com";
+    }
 
     //device-name-label
 
