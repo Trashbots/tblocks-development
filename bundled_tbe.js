@@ -7320,272 +7320,273 @@ SOFTWARE.
 */
 
 module.exports = function () {
-  var log = require('log.js');
-  var fastr = require('fastr.js');
+	var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); //Checks if mobile
+	if (isMobile) {
+		window.location.href = "http://tblocks.app.link";
+	}
+	var log = require('log.js');
+	var fastr = require('fastr.js');
 
-  // Starts as an object and will be mosty empty until start()
-  // is called.
-  var app = {};
-  app.buildFlags = require('../buildFlags.js');
+	// Starts as an object and will be mosty empty until start()
+	// is called.
+	var app = {};
+	app.buildFlags = require('../buildFlags.js');
 
-  var timeFormat = {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
-  };
+	var timeFormat = {
+		year: "2-digit",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		second: "2-digit"
+	};
 
-  log.trace('TBlocks starting -', new Date().toLocaleDateString("en-US", timeFormat));
+	log.trace('TBlocks starting -', new Date().toLocaleDateString("en-US", timeFormat));
 
-  app.hideCookieSheet = function () {
-    var cookieSheet = document.getElementById('cookieSheet');
-    cookieSheet.innerHTML = '';
-    app.storage.setItem('cookiesAccepted', true);
-  };
+	app.hideCookieSheet = function () {
+		var cookieSheet = document.getElementById('cookieSheet');
+		cookieSheet.innerHTML = '';
+		app.storage.setItem('cookiesAccepted', true);
+	};
 
-  app.pause = function () {
-    log.trace('TBlocks pause.', new Date().toLocaleDateString("en-US", timeFormat));
-    app.overlays.pauseResume(true);
-  };
+	app.pause = function () {
+		log.trace('TBlocks pause.', new Date().toLocaleDateString("en-US", timeFormat));
+		app.overlays.pauseResume(true);
+	};
 
-  app.resume = function () {
-    log.trace('TBlocks resuming.', new Date().toLocaleDateString("en-US", timeFormat));
-    app.overlays.pauseResume(false);
-  };
+	app.resume = function () {
+		log.trace('TBlocks resuming.', new Date().toLocaleDateString("en-US", timeFormat));
+		app.overlays.pauseResume(false);
+	};
 
-  // Application main, called once shell is fully up.
-  app.start = function () {
-    if (window.cordova !== undefined) {
-      app.platformId = window.cordova.platformId;
-    } else {
-      app.platformId = "broswer";
-    }
+	// Application main, called once shell is fully up.
+	app.start = function () {
+		if (window.cordova !== undefined) {
+			app.platformId = window.cordova.platformId;
+		} else {
+			app.platformId = "broswer";
+		}
 
-    var isApp = app.isCordovaApp;
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    var luanchMessage = 'verson:' + app.buildFlags.version + ', isApp:' + app.isCordovaApp + ', platform:' + app.platformId + ', screen:(' + w + ', ' + h + ')';
-    log.trace(luanchMessage);
+		var isApp = app.isCordovaApp;
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+		var luanchMessage = 'verson:' + app.buildFlags.version + ', isApp:' + app.isCordovaApp + ', platform:' + app.platformId + ', screen:(' + w + ', ' + h + ')';
+		log.trace(luanchMessage);
 
-    // Once app has started these can be added.
-    document.addEventListener("pause", app.pause, false);
-    document.addEventListener("resume", app.resume, false);
+		// Once app has started these can be added.
+		document.addEventListener("pause", app.pause, false);
+		document.addEventListener("resume", app.resume, false);
 
-    var ko = require('knockout');
-    var Clipboard = require('clipboard');
-    app.tbe = require('./teakblocks.js');
-    app.conductor = require('./conductor.js');
-    app.dots = require('./overlays/actionDots.js');
-    app.defaultFiles = require('./defaultFiles.js');
-    app.teaktext = require('./teaktext.js');
+		var ko = require('knockout');
+		var Clipboard = require('clipboard');
+		app.tbe = require('./teakblocks.js');
+		app.conductor = require('./conductor.js');
+		app.dots = require('./overlays/actionDots.js');
+		app.defaultFiles = require('./defaultFiles.js');
+		app.teaktext = require('./teaktext.js');
 
-    // Add major modules to the application object.
-    var tbe = app.tbe;
+		// Add major modules to the application object.
+		var tbe = app.tbe;
 
-    app.overlays = require('./overlays/overlays.js').init();
-    // a bit of a hack???
-    app.fileManager = app.overlays.screens.fileOverlay;
-    app.storage = app.fileManager.localStorage();
+		app.overlays = require('./overlays/overlays.js').init();
+		// a bit of a hack???
+		app.fileManager = app.overlays.screens.fileOverlay;
+		app.storage = app.fileManager.localStorage();
 
-    if (window.MobileAccessibility) {
-      window.MobileAccessibility.usePreferredTextZoom(false);
-    }
-    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); //Checks if mobile
-    if (isMobile) {
-      window.location.href = "http://tblocks.app.link";
-    }
-    /*
-    else
-    {
-    	window.location.href = "http://tblocks.app.link"; //Testing purposes (redirects to trashbots.github.io)
-    }*/
+		if (window.MobileAccessibility) {
+			window.MobileAccessibility.usePreferredTextZoom(false);
+		}
 
-    // Configuration components for the app and blocks
-    // Initialize knockout databinding for documents DOM
-    tbe.components = {};
-    tbe.components.blockSettings = require('./block-settings.js');
-    ko.applyBindings(tbe.components);
+		/*
+  else
+  {
+  	window.location.href = "http://tblocks.app.link"; //Testing purposes (redirects to trashbots.github.io)
+  }*/
 
-    var formsDiv = document.getElementById('tbe-forms');
-    tbe.components.blockSettings.insert(formsDiv);
+		// Configuration components for the app and blocks
+		// Initialize knockout databinding for documents DOM
+		tbe.components = {};
+		tbe.components.blockSettings = require('./block-settings.js');
+		ko.applyBindings(tbe.components);
 
-    var cookieSheet = document.getElementById('cookieSheet');
-    var cookiesAccepted = app.storage.getItem('cookiesAccepted');
-    if (!isApp && (cookiesAccepted === null || cookiesAccepted === false)) {
-      cookieSheet.innerHTML = '\n        <div id=\'cookiesGlass\'></dev>\n        <div id=\'cookiesForm\'>\n            <div id=\'cookiesNote\'>\n              <input id=\'cookiesButton\' type="button" value="  Accept Cookies  " style="float:right">\n              <p>\n                  We use cookies and similar technologies for document\n                  stroage functionality and to measure performance of application features.\n                  You consent to our cookies if you continue to use our website.\n              </p>\n            </div>\n        </div>\n        ';
-      var cookiesButton = document.getElementById('cookiesButton');
-      cookiesButton.onclick = app.hideCookieSheet;
-    }
+		var formsDiv = document.getElementById('tbe-forms');
+		tbe.components.blockSettings.insert(formsDiv);
 
-    // Some early experiments. seems to work well for desktop Chrome
-    // Safari has noticeable lag, with volume fluctuations.
-    tbe.audio = {
-      shortClick: document.getElementById('short-click'),
-      poof: document.getElementById('poof'),
-      playSound: function playSound(element) {
-        // TODO need means to turn off sounds
-        if (!gIOS /* tbe.components.appSettings.editorSounds() */) {
-            element.play();
-          }
-      }
-    };
-    tbe.audio.shortClick.preload = 'true';
-    tbe.audio.poof.preload = 'true';
+		var cookieSheet = document.getElementById('cookieSheet');
+		var cookiesAccepted = app.storage.getItem('cookiesAccepted');
+		if (!isApp && (cookiesAccepted === null || cookiesAccepted === false)) {
+			cookieSheet.innerHTML = '\n        <div id=\'cookiesGlass\'></dev>\n        <div id=\'cookiesForm\'>\n            <div id=\'cookiesNote\'>\n              <input id=\'cookiesButton\' type="button" value="  Accept Cookies  " style="float:right">\n              <p>\n                  We use cookies and similar technologies for document\n                  stroage functionality and to measure performance of application features.\n                  You consent to our cookies if you continue to use our website.\n              </p>\n            </div>\n        </div>\n        ';
+			var cookiesButton = document.getElementById('cookiesButton');
+			cookiesButton.onclick = app.hideCookieSheet;
+		}
 
-    var buttonsPages = [{ 'label': 'A', 'command': 'loadDocA' }, { 'label': 'B', 'command': 'loadDocB' }, { 'label': 'C', 'command': 'loadDocC' }, { 'label': 'D', 'command': 'loadDocD' }, { 'label': 'E', 'command': 'loadDocE' }];
-    var buttonsEdit = [{ 'label': fastr.copy, 'command': 'copy' }, { 'label': fastr.paste, 'command': 'paste' }, { 'label': fastr.trash, 'command': 'trash' }, { 'label': fastr.settings, 'command': 'splashOverlay' }];
+		// Some early experiments. seems to work well for desktop Chrome
+		// Safari has noticeable lag, with volume fluctuations.
+		tbe.audio = {
+			shortClick: document.getElementById('short-click'),
+			poof: document.getElementById('poof'),
+			playSound: function playSound(element) {
+				// TODO need means to turn off sounds
+				if (!gIOS /* tbe.components.appSettings.editorSounds() */) {
+						element.play();
+					}
+			}
+		};
+		tbe.audio.shortClick.preload = 'true';
+		tbe.audio.poof.preload = 'true';
 
-    tbe.deleteRay = null;
-    tbe.commands = {
-      'play': function play() {
-        app.conductor.playAll();
-      },
-      'stop': function stop() {
-        app.conductor.stopAll();
-      },
-      'trash': function trash() {
-        tbe.clearAllBlocks();
-      },
-      'pages': function pages() {
-        tbe.clearStates();tbe.dropdownButtons = app.dots.showDropdown(buttonsPages, tbe, fastr.folder, 'pages');
-      },
-      'edit': function edit() {
-        tbe.clearStates();tbe.dropdownButtons = app.dots.showDropdown(buttonsEdit, tbe, fastr.edit, 'edit');
-      },
-      'loadDocA': function loadDocA() {
-        tbe.loadDoc('docA');
-      },
-      'loadDocB': function loadDocB() {
-        tbe.loadDoc('docB');
-      },
-      'loadDocC': function loadDocC() {
-        tbe.loadDoc('docC');
-      },
-      'loadDocD': function loadDocD() {
-        tbe.loadDoc('docD');
-      },
-      'loadDocE': function loadDocE() {
-        tbe.loadDoc('docE');
-      },
+		var buttonsPages = [{ 'label': 'A', 'command': 'loadDocA' }, { 'label': 'B', 'command': 'loadDocB' }, { 'label': 'C', 'command': 'loadDocC' }, { 'label': 'D', 'command': 'loadDocD' }, { 'label': 'E', 'command': 'loadDocE' }];
+		var buttonsEdit = [{ 'label': fastr.copy, 'command': 'copy' }, { 'label': fastr.paste, 'command': 'paste' }, { 'label': fastr.trash, 'command': 'trash' }, { 'label': fastr.settings, 'command': 'splashOverlay' }];
 
-      'docSnapShot': function docSnapShot() {
-        app.overlays.fileOverlay.cameraFlash();
-      },
-      'driveOverlay': 'driveOverlay',
-      'debugOverlay': 'debugOverlay',
-      'splashOverlay': 'splashOverlay',
-      'deviceScanOverlay': 'deviceScanOverlay',
+		tbe.deleteRay = null;
+		tbe.commands = {
+			'play': function play() {
+				app.conductor.playAll();
+			},
+			'stop': function stop() {
+				app.conductor.stopAll();
+			},
+			'trash': function trash() {
+				tbe.clearAllBlocks();
+			},
+			'pages': function pages() {
+				tbe.clearStates();tbe.dropdownButtons = app.dots.showDropdown(buttonsPages, tbe, fastr.folder, 'pages');
+			},
+			'edit': function edit() {
+				tbe.clearStates();tbe.dropdownButtons = app.dots.showDropdown(buttonsEdit, tbe, fastr.edit, 'edit');
+			},
+			'loadDocA': function loadDocA() {
+				tbe.loadDoc('docA');
+			},
+			'loadDocB': function loadDocB() {
+				tbe.loadDoc('docB');
+			},
+			'loadDocC': function loadDocC() {
+				tbe.loadDoc('docC');
+			},
+			'loadDocD': function loadDocD() {
+				tbe.loadDoc('docD');
+			},
+			'loadDocE': function loadDocE() {
+				tbe.loadDoc('docE');
+			},
 
-      'settings': function settings() {
-        tbe.loadSettings();
-      },
-      'copy': function copy() {
-        tbe.copyText = app.teaktext.blocksToText(tbe.forEachDiagramChain);
-      },
-      'paste': function paste() {
-        if (tbe.copyTest !== null) {
-          app.teaktext.textToBlocks(tbe, tbe.copyText);
-        }
-      },
-      'save': function save() {
-        var currentDocText = app.teaktext.blocksToText(tbe.forEachDiagramChain);
-        app.storage.setItem(tbe.currentDoc, currentDocText);
-      },
-      'calibrate': 'calibrationOverlay'
-    };
+			'docSnapShot': function docSnapShot() {
+				app.overlays.fileOverlay.cameraFlash();
+			},
+			'driveOverlay': 'driveOverlay',
+			'debugOverlay': 'debugOverlay',
+			'splashOverlay': 'splashOverlay',
+			'deviceScanOverlay': 'deviceScanOverlay',
 
-    // Construct the clipboard
-    var clipboard = new Clipboard('.copy-button', {
-      text: function text() {
-        return app.teaktext.blocksToText(tbe.forEachDiagramChain);
-      }
-    });
-    clipboard.on('success', function (e) {
-      log.trace('clipboard success', e);
-    });
-    clipboard.on('error', function (e) {
-      log.trace('clipboard error', e);
-    });
+			'settings': function settings() {
+				tbe.loadSettings();
+			},
+			'copy': function copy() {
+				tbe.copyText = app.teaktext.blocksToText(tbe.forEachDiagramChain);
+			},
+			'paste': function paste() {
+				if (tbe.copyTest !== null) {
+					app.teaktext.textToBlocks(tbe, tbe.copyText);
+				}
+			},
+			'save': function save() {
+				var currentDocText = app.teaktext.blocksToText(tbe.forEachDiagramChain);
+				app.storage.setItem(tbe.currentDoc, currentDocText);
+			},
+			'calibrate': 'calibrationOverlay'
+		};
 
-    // these could be loaded from JSON files/strings
-    var package1 = {
-      blocks: [
-      // Start Blocks
-      { name: 'identity', group: 'start' }, { name: 'identityAccelerometer', group: 'start' }, { name: 'identityButton', group: 'start' }, { name: 'identityTemperature', group: 'start' },
-      // Function Blocks
-      { name: 'picture', group: 'fx' }, { name: 'sound', group: 'fx' }, { name: 'motor', group: 'fx' }, { name: 'twoMotor', group: 'fx' }, { name: 'variableSet', group: 'fx' }, { name: 'variableAdd', group: 'fx' }, { name: 'print', group: 'fx' },
-      // Control Blocks
-      { name: 'wait', group: 'control' }, { name: 'loop', group: 'control' }]
-    };
+		// Construct the clipboard
+		var clipboard = new Clipboard('.copy-button', {
+			text: function text() {
+				return app.teaktext.blocksToText(tbe.forEachDiagramChain);
+			}
+		});
+		clipboard.on('success', function (e) {
+			log.trace('clipboard success', e);
+		});
+		clipboard.on('error', function (e) {
+			log.trace('clipboard error', e);
+		});
 
-    var actionButtonDefs = [{ 'alignment': 'L', 'label': fastr.play, 'command': 'play', 'tweakx': 4 }, { 'alignment': 'L', 'label': fastr.stop, 'command': 'stop' }, { 'alignment': 'L', 'label': fastr.gamepad, 'command': 'driveOverlay' }, { 'alignment': 'M', 'label': fastr.debug, 'command': 'debugOverlay' }, { 'alignment': 'M', 'label': fastr.file, 'command': 'pages', 'sub': buttonsPages }, { 'alignment': 'M', 'label': fastr.edit, 'command': 'edit', 'sub': buttonsEdit }, { 'alignment': 'M', 'label': fastr.calibrate, 'command': 'calibrate' }, { 'alignment': 'R', 'label': '', 'command': 'deviceScanOverlay' }];
+		// these could be loaded from JSON files/strings
+		var package1 = {
+			blocks: [
+			// Start Blocks
+			{ name: 'identity', group: 'start' }, { name: 'identityAccelerometer', group: 'start' }, { name: 'identityButton', group: 'start' }, { name: 'identityTemperature', group: 'start' },
+			// Function Blocks
+			{ name: 'picture', group: 'fx' }, { name: 'sound', group: 'fx' }, { name: 'motor', group: 'fx' }, { name: 'twoMotor', group: 'fx' }, { name: 'variableSet', group: 'fx' }, { name: 'variableAdd', group: 'fx' }, { name: 'print', group: 'fx' },
+			// Control Blocks
+			{ name: 'wait', group: 'control' }, { name: 'loop', group: 'control' }]
+		};
 
-    var base = app.dots.defineButtons(actionButtonDefs, document.getElementById('editorSvgCanvas'));
-    // It seesm SVG eat all the events, even ones that don't hit any objects :(
-    //actionDots.defineButtons(actionButtonDefs, document.getElementById('actionDotSvgCanvas'));
+		var actionButtonDefs = [{ 'alignment': 'L', 'label': fastr.play, 'command': 'play', 'tweakx': 4 }, { 'alignment': 'L', 'label': fastr.stop, 'command': 'stop' }, { 'alignment': 'L', 'label': fastr.gamepad, 'command': 'driveOverlay' }, { 'alignment': 'M', 'label': fastr.debug, 'command': 'debugOverlay' }, { 'alignment': 'M', 'label': fastr.file, 'command': 'pages', 'sub': buttonsPages }, { 'alignment': 'M', 'label': fastr.edit, 'command': 'edit', 'sub': buttonsEdit }, { 'alignment': 'M', 'label': fastr.calibrate, 'command': 'calibrate' }, { 'alignment': 'R', 'label': '', 'command': 'deviceScanOverlay' }];
 
-    // This is pretty Wonky
-    app.defaultFiles.setupDefaultPages(false);
+		var base = app.dots.defineButtons(actionButtonDefs, document.getElementById('editorSvgCanvas'));
+		// It seesm SVG eat all the events, even ones that don't hit any objects :(
+		//actionDots.defineButtons(actionButtonDefs, document.getElementById('actionDotSvgCanvas'));
 
-    tbe.init(document.getElementById('editorSvgCanvas'), base);
+		// This is pretty Wonky
+		app.defaultFiles.setupDefaultPages(false);
 
-    var loadedDocText = app.storage.getItem('docA');
-    if (loadedDocText !== null) {
-      app.teaktext.textToBlocks(tbe, loadedDocText);
-    }
+		tbe.init(document.getElementById('editorSvgCanvas'), base);
 
-    // Add the main command buttons, to left, middle and right locations.
-    tbe.addPalette(package1);
+		var loadedDocText = app.storage.getItem('docA');
+		if (loadedDocText !== null) {
+			app.teaktext.textToBlocks(tbe, loadedDocText);
+		}
 
-    // Connect to resize event for refresh. Make initial call
-    document.body.onresize = tbe.resize;
-    tbe.resize();
+		// Add the main command buttons, to left, middle and right locations.
+		tbe.addPalette(package1);
 
-    app.conductor.attachToScoreEditor(tbe);
+		// Connect to resize event for refresh. Make initial call
+		document.body.onresize = tbe.resize;
+		tbe.resize();
 
-    var showSplashAtAlunch = app.isRegularBrowser;
-    showSplashAtAlunch = false; // For quick codova style test in browsers.
-    if (showSplashAtAlunch && app.splashOverlay.showLaunchAboutBox()) {
-      app.doCommand('splashOverlay');
-    }
-  };
+		app.conductor.attachToScoreEditor(tbe);
 
-  app.doCommand = function (commandName) {
-    // Write the current doc state to storage insert
-    // before any command
-    app.tbe.saveCurrentDoc();
+		var showSplashAtAlunch = app.isRegularBrowser;
+		showSplashAtAlunch = false; // For quick codova style test in browsers.
+		if (showSplashAtAlunch && app.splashOverlay.showLaunchAboutBox()) {
+			app.doCommand('splashOverlay');
+		}
+	};
 
-    var cmd = app.tbe.commands[commandName];
-    if (app.overlays.isAnimating) {
-      return;
-    }
+	app.doCommand = function (commandName) {
+		// Write the current doc state to storage insert
+		// before any command
+		app.tbe.saveCurrentDoc();
 
-    if (app.overlays.currentShowing !== null) {
-      // First hide the current one, then
-      // invoke the command once hiding animation is done.
-      if (app.overlays.currentShowing === cmd) {
-        // Simply hide if its the same overlay.
-        app.dots.activate(commandName, 0);
-        app.overlays.hideOverlay(null);
-      } else {
-        if (typeof cmd === 'string') {
-          app.dots.activate(commandName, 3);
-        }
-        app.overlays.hideOverlay(function () {
-          app.doCommand(commandName);
-        });
-      }
-    } else if (typeof cmd === 'function') {
-      cmd();
-    } else if (typeof cmd === 'string') {
-      app.dots.activate(cmd, 3);
-      app.overlays.showOverlay(cmd);
-    }
-  };
+		var cmd = app.tbe.commands[commandName];
+		if (app.overlays.isAnimating) {
+			return;
+		}
 
-  return app;
+		if (app.overlays.currentShowing !== null) {
+			// First hide the current one, then
+			// invoke the command once hiding animation is done.
+			if (app.overlays.currentShowing === cmd) {
+				// Simply hide if its the same overlay.
+				app.dots.activate(commandName, 0);
+				app.overlays.hideOverlay(null);
+			} else {
+				if (typeof cmd === 'string') {
+					app.dots.activate(commandName, 3);
+				}
+				app.overlays.hideOverlay(function () {
+					app.doCommand(commandName);
+				});
+			}
+		} else if (typeof cmd === 'function') {
+			cmd();
+		} else if (typeof cmd === 'string') {
+			app.dots.activate(cmd, 3);
+			app.overlays.showOverlay(cmd);
+		}
+	};
+
+	return app;
 }();
 
 },{"../buildFlags.js":1,"./block-settings.js":14,"./conductor.js":33,"./defaultFiles.js":35,"./overlays/actionDots.js":38,"./overlays/overlays.js":44,"./teakblocks.js":46,"./teaktext.js":48,"clipboard":3,"fastr.js":51,"knockout":9,"log.js":53}],14:[function(require,module,exports){
@@ -11312,7 +11313,7 @@ module.exports = function factory() {
 
   cxn.write = function (name, message) {
     if (!cxn.calibrating) {
-      console.log(cxn.calibrating);
+      //console.log(cxn.calibrating);
       try {
         if (cxn.devices.hasOwnProperty(name)) {
           var mac = cxn.devices[name].mac;
@@ -11752,7 +11753,7 @@ module.exports = function () {
     var dotHalf = dotd / 2;
     var fontY = y + dotHalf + fontSize / 3;
 
-    console.log(dso.robotOnlyPos);
+    //console.log(dso.robotOnlyPos)
     //Check if character strings are more than one character to create a label on top of the usual label
     if (this.command === 'deviceScanOverlay') {
 
@@ -11765,15 +11766,15 @@ module.exports = function () {
       dso.robotOnlyPos = buttonLeft + 35 * scale;
       this.svgDot = svgb.createRect('action-dot-bg', buttonLeft, y, buttonWidth, dotd, dotHalf);
       this.svgText = svgb.createText('fa fas action-dot-fatext', buttonCenter, fontY, fastr.robot + " -?-");
-
       this.svgText.setAttribute('id', 'device-name-label');
+
       this.nameText = svgb.createText('fa fas action-dot-fatext', buttonCenter + buttonWidth / 6, y + dotd * 0.25 + fontSize / 3, "");
       this.nameText.setAttribute('id', 'actual-name-label');
 
       this.batteryText = svgb.createText('fa fas action-dot-fatext', buttonCenter + buttonWidth / 6, y + dotd * 0.75 + fontSize / 3, "");
       this.batteryText.setAttribute('id', 'battery-label');
 
-      editStyle.setFontSize(this.svgText.style, fontSize * 1.1);
+      editStyle.setFontSize(this.svgText.style, fontSize * 1);
       editStyle.setFontSize(this.batteryText.style, fontSize * 0.95);
       editStyle.setFontSize(this.nameText.style, fontSize * 0.8);
     } else if (this.label === fastr.file) {
@@ -12281,9 +12282,11 @@ module.exports = function () {
 
   dso.getBattery = function () {
     var percent = cxn.batteryPercent;
-    if (dso.deviceName === dso.nonName) {
-      return "";
-    } else if (percent > fullThreshold) {
+    /*if (dso.deviceName === dso.nonName)
+    {
+      return ""
+    }
+    else */if (percent > fullThreshold) {
       return fastr.batteryFull;
     } else if (percent > threeQuartersThreshold) {
       return fastr.batteryThreeQuarters;
@@ -12297,16 +12300,18 @@ module.exports = function () {
   };
 
   dso.updateScreenName = function (botName) {
-    dso.deviceName = botName;
+    dso.deviceName = "vegat";
     dso.disconnectButton.disabled = dso.deviceName === dso.nonName;
     // console.log(dso.decoratedName())
-    // console.log(dso.getBattery())
+    // console.log(cxn.versionNumber)
     //dso.deviceName = "vegat"
-    if (dso.deviceName !== dso.nonName) {
+    if (cxn.versionNumber >= 11 && dso.deviceName !== dso.nonName) {
       dso.deviceNameLabel.innerHTML = fastr.robot;
       dso.deviceNameLabel.setAttribute('x', dso.robotOnlyPos);
       dso.batteryLabel.innerHTML = dso.getBattery();
       dso.actualNameLabel.innerHTML = dso.deviceName;
+    } else {
+      dso.deviceNameLabel.innerHTML = fastr.robot + ' ' + dso.deviceName;
     }
     //console.log(dso.deviceNameLabel.innerHTML)
   };
