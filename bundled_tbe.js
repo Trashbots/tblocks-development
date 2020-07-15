@@ -7321,7 +7321,7 @@ SOFTWARE.
 
 module.exports = function () {
 
-	var oldAlert = window.alert;
+	//const oldAlert = window.alert
 	window.alert = function () {};
 	window.onload = function () {
 		var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -7336,7 +7336,8 @@ module.exports = function () {
 		// 	window.location.href = "https://trashbots.github.io/tblocks"
 		// }
 	};
-	window.alert = oldAlert;
+	//window.alert = oldAlert
+
 
 	var log = require('log.js');
 	var fastr = require('fastr.js');
