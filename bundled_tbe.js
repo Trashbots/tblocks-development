@@ -7295,7 +7295,7 @@ module.exports = E;
 module.exports.TinyEmitter = E;
 
 },{}],13:[function(require,module,exports){
-"use strict";
+'use strict';
 
 /*
 Copyright (c) 2020 Trashbots - SDG
@@ -7321,23 +7321,25 @@ SOFTWARE.
 
 module.exports = function () {
 
+	// window.onload = function() {
+	// 	const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+	// 	if (isMobile)
+	// 	{
+	// 		window.location.href = "tblocks://"
+	// 		setTimeout(() => {window.location.href = "https://trashbots.github.io/tblocks"}, 5000)		
+	// 	}
+	// 	// else
+	// 	// {
+	// 	// 		window.location.href = "https://trashbots.github.io/tblocks"
+	// 	// }
+	// }
 	window.onload = function () {
-		var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+		var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); //Checks if mobile
 		if (isMobile) {
-			window.location.href = "tblocks://";
-			setTimeout(function () {
-				window.location.href = "https://trashbots.github.io/tblocks";
-			}, 5000);
-		} else {
-			window.location.href = "https://trashbots.github.io/tblocks";
+			window.location.href = "http://tblocks.app.link";
 		}
 	};
-	/*
- const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); //Checks if mobile
- if (isMobile) {
- 	window.location.href = "http://tblocks.app.link";
- }
- */
+
 	var log = require('log.js');
 	var fastr = require('fastr.js');
 
@@ -7429,7 +7431,7 @@ module.exports = function () {
 		var cookieSheet = document.getElementById('cookieSheet');
 		var cookiesAccepted = app.storage.getItem('cookiesAccepted');
 		if (!isApp && (cookiesAccepted === null || cookiesAccepted === false)) {
-			cookieSheet.innerHTML = "\n        <div id='cookiesGlass'></dev>\n        <div id='cookiesForm'>\n            <div id='cookiesNote'>\n              <input id='cookiesButton' type=\"button\" value=\"  Accept Cookies  \" style=\"float:right\">\n              <p>\n                  We use cookies and similar technologies for document\n                  stroage functionality and to measure performance of application features.\n                  You consent to our cookies if you continue to use our website.\n              </p>\n            </div>\n        </div>\n        ";
+			cookieSheet.innerHTML = '\n        <div id=\'cookiesGlass\'></dev>\n        <div id=\'cookiesForm\'>\n            <div id=\'cookiesNote\'>\n              <input id=\'cookiesButton\' type="button" value="  Accept Cookies  " style="float:right">\n              <p>\n                  We use cookies and similar technologies for document\n                  stroage functionality and to measure performance of application features.\n                  You consent to our cookies if you continue to use our website.\n              </p>\n            </div>\n        </div>\n        ';
 			var cookiesButton = document.getElementById('cookiesButton');
 			cookiesButton.onclick = app.hideCookieSheet;
 		}
