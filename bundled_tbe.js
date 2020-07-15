@@ -7326,13 +7326,11 @@ module.exports = function () {
 		if (isMobile) {
 			window.location.href = "tblocks://";
 			setTimeout(function () {
-				window.location.href = "tblocks.app.link";
+				window.location.href = "http://tblocks.app.link";
 			}, 1000);
+		} else {
+			window.location.href = "https://trashbots.github.io/tblocks";
 		}
-		// else
-		// {
-		// 		window.location.href = "https://trashbots.github.io/tblocks"
-		// }
 	};
 
 	var log = require('log.js');
