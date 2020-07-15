@@ -7326,15 +7326,13 @@ module.exports = function () {
 	window.onload = function () {
 		var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 		if (isMobile) {
-			window.open("tblocks://");
-			window.open("http://tblocks.app.link");
-			//window.location.href = "tblocks://"
-			//setTimeout(() => {window.location.href = "http://tblocks.app.link"}, 1000)		
+			window.location.href = "tblocks://";
+			setTimeout(function () {
+				window.location.href = "http://tblocks.app.link";
+			}, 1000);
+		} else {
+			window.location.href = "https://trashbots.github.io/tblocks";
 		}
-		// else
-		// {
-		// 	window.location.href = "https://trashbots.github.io/tblocks"
-		// }
 	};
 	//window.alert = oldAlert
 
