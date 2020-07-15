@@ -7326,7 +7326,7 @@ module.exports = function () {
 		if (isMobile) {
 			window.location.href = "tblocks://";
 			setTimeout(function () {
-				window.location.href = "https://trashbots.github.io/tblocks";
+				window.location.href = "tblocks.app.link";
 			}, 1000);
 		}
 		// else
