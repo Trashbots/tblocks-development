@@ -7338,7 +7338,10 @@ module.exports = function () {
  }
  */
 	//window.alert = oldAlert
-
+	var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+	if (isMobile) {
+		window.location.href = "https://tblocks.app.link";
+	}
 
 	var log = require('log.js');
 	var fastr = require('fastr.js');
