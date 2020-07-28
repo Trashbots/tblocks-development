@@ -7338,10 +7338,7 @@ module.exports = function () {
  }
  */
 	//window.alert = oldAlert
-	var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-	if (isMobile) {
-		window.location.href = "https://tblocks.app.link";
-	}
+
 
 	var log = require('log.js');
 	var fastr = require('fastr.js');
@@ -7434,7 +7431,7 @@ module.exports = function () {
 		var cookieSheet = document.getElementById('cookieSheet');
 		var cookiesAccepted = app.storage.getItem('cookiesAccepted');
 		if (!isApp && (cookiesAccepted === null || cookiesAccepted === false)) {
-			cookieSheet.innerHTML = '\n        <div id=\'cookiesGlass\'></dev>\n        <div id=\'cookiesForm\'>\n            <div id=\'cookiesNote\'>\n\t\t\t  <input id=\'cookiesButton\' type="button" value="  Accept Cookies  " style="float:right">\n\t\t\t  <a href="https://tblocks.app.link">Deep Link</a>\n              <p>\n                  We use cookies and similar technologies for document\n                  stroage functionality and to measure performance of application features.\n                  You consent to our cookies if you continue to use our website.\n              </p>\n            </div>\n        </div>\n        ';
+			cookieSheet.innerHTML = '\n        <div id=\'cookiesGlass\'></dev>\n        <div id=\'cookiesForm\'>\n            <div id=\'cookiesNote\'>\n\t\t\t  <input id=\'cookiesButton\' type="button" value="  Accept Cookies  " style="float:right">\n              <p>\n                  We use cookies and similar technologies for document\n                  stroage functionality and to measure performance of application features.\n                  You consent to our cookies if you continue to use our website.\n              </p>\n            </div>\n        </div>\n        ';
 			var cookiesButton = document.getElementById('cookiesButton');
 			cookiesButton.onclick = app.hideCookieSheet;
 		}
@@ -11576,34 +11573,51 @@ SOFTWARE.
 */
 
 var app = require('./appMain.js');
+var overlays = require('./overlays/overlays.js').init();
 
 // Determine if page launched in broswer, or cordova/phone-gap app.
 app.isRegularBrowser = document.URL.indexOf('http://') >= 0 || document.URL.indexOf('https://') >= -0;
 
 if (!app.isRegularBrowser) {
 
-  // Add view port info dynamically. might help iOS WKWebview
-  var meta = document.createElement('meta');
-  meta.name = 'viewport';
-  meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0';
-  document.getElementsByTagName('head')[0].appendChild(meta);
-  //<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	// Add view port info dynamically. might help iOS WKWebview
+	var meta = document.createElement('meta');
+	meta.name = 'viewport';
+	meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0';
+	document.getElementsByTagName('head')[0].appendChild(meta);
+	//<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 
-  app.isCordovaApp = true;
-  // Guess that it is Cordova then. Not intened to run directly from file:
-  document.addEventListener('deviceready', app.start, false);
-  var script = document.createElement('script');
-  // Load cordova.js if not in regular browser, and then set up initialization.
-  script.setAttribute('src', './cordova.js');
-  document.head.appendChild(script);
+	app.isCordovaApp = true;
+	// Guess that it is Cordova then. Not intened to run directly from file:
+	document.addEventListener('deviceready', app.start, false);
+	var script = document.createElement('script');
+	// Load cordova.js if not in regular browser, and then set up initialization.
+	script.setAttribute('src', './cordova.js');
+	document.head.appendChild(script);
 } else {
-  // If in regular broswer, call start directly.
-  app.isCordovaApp = false;
-  app.start();
+	// If in regular broswer, call start directly.
+	var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+	if (isMobile) {
+		//window.location.href = 'landingPage.html'
+		overlays.insertHTML('\n        <div id=\'mobileOverlay\'>\n            <div id=\'mobileDialog\'>\n\t\t\t  <h1 style = "text-align:center">You are on a mobile Device</h1>\n\t\t\t\t<div style = "text-align:center;">\n\t\t\t\t\tConsider using our mobile app instead: <a href = "https://tblocks.app.link">TBlocks</a>\n\t\t\t\t</div>\n\t\t\t\t<br>\n\t\t\t\t<br>\n\t\t\t\t<div style = "text-align:center;">\n\t\t\t\t\tOr continue with <a id="regularWebsite" href = \'#\'>our website</a>.\n\t\t\t\t</div>\n\t\t\t  </div>\n\t\t</div>');
+		var regularWebsite = document.getElementById("regularWebsite");
+		regularWebsite.onclick = function () {
+			document.getElementById("mobileOverlay").style.display = "none";
+			event.preventDefault();
+			app.isCordovaApp = false;
+			app.start();
+		};
+	} //			 <a href="https://tblocks.app.link">tblocks</a> 			  <h3 style = "text-align:center;">Considering using our mobile app instead: </h3>
+
+
+	else {
+			app.isCordovaApp = false;
+			app.start();
+		}
 }
 
-},{"./appMain.js":13}],38:[function(require,module,exports){
+},{"./appMain.js":13,"./overlays/overlays.js":44}],38:[function(require,module,exports){
 'use strict';
 
 /*
@@ -12112,7 +12126,7 @@ module.exports = function () {
   // External function for putting it all together.
   calibrationOverlay.start = function () {
 
-    overlays.insertHTML('\n        <style id=\'calibration-text-id\'>\n          calibration-text { font-size:18px; }\n        </style>\n        <div id=\'calibrationOverlay\'>\n            <div id=\'calibrationDialog\'>\n              <p class=\'calibration-title\'>Smart Steering Calibration</p>\n              <p class=\'calibration-body calibration-text\'>Click below to activate Smart Steering Calibration, a PID based system for accurate driving</p>\n              <!--p id = \'calibration-copy\' class=\'calibration-body calibration-text\'>\xA9 2020 Trashbots. All rights reserved.</p-->\n              <br>\n            <div id=\'calibration-button-area\'>\n                <button id=\'calibration-activate\' class=\'calibration-button calibration-text\'>Begin calibration!</button>\n            </div>\n            <br><br>\n            <button id=\'calibration-done\' class=\'calibration-button calibration-text\'>Close.</button>\n            <br>\n            </div>\n        </div>');
+    overlays.insertHTML('\n\t\t<style id=\'calibration-text-id\'>\n\t\t\tcalibration-text { font-size:18px; }\n\t\t</style>\n\t\t<div id=\'calibrationOverlay\'>\n\t\t\t<div id=\'calibrationDialog\'>\n\t\t\t\t<p class=\'calibration-title\'>Smart Steering Calibration</p>\n\t\t\t\t<p class=\'calibration-body calibration-text\'>Click below to activate Smart Steering Calibration, a PID based system for accurate driving</p>\n\t\t\t\t<!--p id = \'calibration-copy\' class=\'calibration-body calibration-text\'>\xA9 2020 Trashbots. All rights reserved.</p-->\n\t\t\t\t<br>\n\t\t\t<div id=\'calibration-button-area\'>\n\t\t\t\t<button id=\'calibration-activate\' class=\'calibration-button calibration-text\'>Begin calibration!</button>\n\t\t\t</div>\n\t\t\t<br><br>\n\t\t\t<button id=\'calibration-done\' class=\'calibration-button calibration-text\'>Close.</button>\n\t\t\t<br>\n\t\t\t</div>\n\t\t</div>');
 
     var caliArea = document.getElementById('calibration-button-area');
 
@@ -12319,7 +12333,7 @@ module.exports = function () {
   };
 
   dso.updateScreenName = function (botName) {
-    dso.deviceName = "vegat";
+    dso.deviceName = botName;
     dso.disconnectButton.disabled = dso.deviceName === dso.nonName;
     // console.log(dso.decoratedName())
     // console.log(cxn.versionNumber)
