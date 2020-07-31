@@ -7329,7 +7329,7 @@ module.exports = function () {
  	if (isMobile)
  	{
  		window.location.href = "tblocks://"
- 		setTimeout(() => {window.location.href = "http://tblocks.app.link"}, 1000)		
+ 		setTimeout(() => {window.location.href = "http://tblocks.app.link"}, 1000)
  	}
  	else
  	{
@@ -10318,7 +10318,7 @@ module.exports = function () {
       'suffix': "",
       'numArray': ["-1", "C", "+1", "-10", undefined, "+10"],
       'calcLayout': 'simple',
-      'inner': '<div id=\'keypadDiv\' class=\'editorDiv\'>\n          <select class="dropdown-comparison vars-dropdown-comparison" id="var-list">\n          </select>\n          <div class="dropdown-label-txt varAdd-label-txt svg-clear" id="varAdd-incdec">\uF061\n          </div>\n          <div id="numeric-display" class = "numeric-display-third svg-clear" width=\'30px\' height=\'80px\' data-bind=\'text: keyPadValue\'>\n          </div>\n          <svg id="keypadSvg" class=\'area\' width=\'225px\' height=\'200px\' xmlns=\'http://www.w3.org/2000/svg\'></svg>\n      </div>'
+      'inner': '<div id=\'keypadDiv\' class=\'editorDiv\'>\n          <select class="dropdown-comparison vars-dropdown-comparison" id="var-list">\n          </select>\n          <div class="dropdown-label-txt varAdd-label-txt svg-clear" id="varAdd-incdec">\u2192\n          </div>\n          <div id="numeric-display" class = "numeric-display-third svg-clear" width=\'30px\' height=\'80px\' data-bind=\'text: keyPadValue\'>\n          </div>\n          <svg id="keypadSvg" class=\'area\' width=\'225px\' height=\'200px\' xmlns=\'http://www.w3.org/2000/svg\'></svg>\n      </div>'
     });
 
     // Add variables to the drop down.
@@ -11286,8 +11286,8 @@ module.exports = function factory() {
       var str = bufferToString(data);
       //  log.trace('On Data:', name, str);
       cxn.messages.push(name + ':' + str);
-      if (str.includes('ac')) {
-        var accelData = str.substring(4, str.length - 1);
+      if (str.includes('ac') || str.includes('accel')) {
+        var accelData = str.includes('ac') ? str.substring(4, str.length - 1) : str.substring(7, str.length - 1);
         cxn.accelerometer = parseInt(accelData, 10) / 20;
       } else if (str.includes('(a)')) {
         cxn.buttonA = true;
@@ -11297,8 +11297,8 @@ module.exports = function factory() {
         cxn.buttonAB = true;
       } else if (str.includes('compass')) {
         cxn.compass = str.substring(9, str.length - 2);
-      } else if (str.includes('tp')) {
-        var tempData = str.substring(4, str.length - 1);
+      } else if (str.includes('tp') || str.includes('temp')) {
+        var tempData = str.includes('tp') ? str.substring(4, str.length - 1) : str.substring(6, str.length - 1);
         var fData = 1.8 * parseInt(tempData, 10) + 32;
         cxn.temperature = fData;
       } else if (str.includes('vs')) {
@@ -11608,13 +11608,10 @@ if (!app.isRegularBrowser) {
 			app.isCordovaApp = false;
 			app.start();
 		};
-	} //			 <a href="https://tblocks.app.link">tblocks</a> 			  <h3 style = "text-align:center;">Considering using our mobile app instead: </h3>
-
-
-	else {
-			app.isCordovaApp = false;
-			app.start();
-		}
+	} else {
+		app.isCordovaApp = false;
+		app.start();
+	}
 }
 
 },{"./appMain.js":13,"./overlays/overlays.js":44}],38:[function(require,module,exports){
