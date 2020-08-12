@@ -10673,7 +10673,7 @@ module.exports = function () {
         }
       }
     }
-    if (block.name === 'print') {
+    if (block && block.name === 'print') {
       var x = conductor.getPrintVal(block.controllerSettings.data); //value
       var digits = x.toString().length;
       conductor.hbTimer = setTimeout(function () {
@@ -11313,6 +11313,7 @@ module.exports = function factory() {
       } else if (str.includes('vs')) {
         cxn.versionNumber = str.substring(4, str.length - 1);
         console.log('version number:', cxn.versionNumber);
+        cxn.write(name, '(vr)');
       } else if (str.includes('bt')) {
         cxn.batteryPercent = str.substring(4, str.length - 1);
       } else if (str.includes('cs')) {
@@ -11609,7 +11610,7 @@ if (!app.isRegularBrowser) {
 	var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 	if (isMobile) {
 		// Build the HTML for mobile overlay without animation
-		overlays.insertHTML('\n\t\t\t<div id=\'mobileOverlay\'>\n\t\t\t\t<div id=\'mobileDialog\'>\n\t\t\t\t<h1 style = "text-align:center">You are on a mobile Device</h1>\n\t\t\t\t\t<div style = "text-align:center;">\n\t\t\t\t\t\tConsider using our mobile app instead: <a href = "https://tblocks.app.link">TBlocks</a>\n\t\t\t\t\t</div>\n\t\t\t\t\t<br>\n\t\t\t\t\t<br>\n\t\t\t\t\t<div style = "text-align:center;">\n\t\t\t\t\t\tOr continue with <a href = \'#\' id="regularWebsite">our website</a>.\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>');
+		overlays.insertHTML('\n\t\t\t<div id=\'mobileOverlay\'>\n\t\t\t\t<div id=\'mobileDialog\'>\n\t\t\t\t<h1 style = "text-align:center">You are on a mobile Device</h1>\n\t\t\t\t\t<div style = "text-align:center;">\n\t\t\t\t\t\tConsider using our mobile app: <a href = "https://tblocks.app.link">TBlocks</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>');
 		var regularWebsite = document.getElementById("regularWebsite");
 		regularWebsite.onclick = function () {
 			overlays.currentIsClosing = true;
@@ -12525,9 +12526,9 @@ module.exports = function () {
       dso.watch = null;
     }
 
-    var botName = dso.deviceName;
-    var message = '(vs)';
-    cxn.write(botName, message);
+    //var botName = dso.deviceName;
+    //var message = '(vs)';
+    //cxn.write(botName, message);
   };
 
   dso.tryConnect = function (tb) {
