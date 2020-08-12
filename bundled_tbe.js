@@ -9670,132 +9670,152 @@ SOFTWARE.
 */
 
 module.exports = function () {
-  var interact = require('interact.js');
-  var ko = require('knockout');
-  var svgb = require('svgbuilder.js');
-  var icons = require('icons.js');
-  var printBlock = {};
-  var vars = require('./../variables.js');
-  var fastr = require('fastr.js');
+	var interact = require('interact.js');
+	var ko = require('knockout');
+	var svgb = require('svgbuilder.js');
+	var icons = require('icons.js');
+	var printBlock = {};
+	var vars = require('./../variables.js');
+	var fastr = require('fastr.js');
 
-  // Items for selecting a device from a list.
-  //identityAccelerometer.devices = ko.observableArray([]);
-  printBlock.keyPadValue = ko.observable(0);
+	// Items for selecting a device from a list.
+	//identityAccelerometer.devices = ko.observableArray([]);
+	printBlock.keyPadValue = ko.observable(0);
 
-  // Initial settings for blocks of this type.
-  printBlock.defaultSettings = function () {
-    // Return a new object with settings for the controller.
-    return {
-      data: {
-        // What to print: var, sensor
-        print: 'var',
-        variable: 'A',
-        sensor: 'temperature',
-        button: 'A',
-        // Value
-        value: 0
-      }
-    };
-  };
+	// Initial settings for blocks of this type.
+	printBlock.defaultSettings = function () {
+		// Return a new object with settings for the controller.
+		return {
+			data: {
+				// What to print: var, sensor
+				print: 'var',
+				variable: 'A',
+				sensor: 'temperature',
+				button: 'A',
+				// Value
+				value: 0
+			}
+		};
+	};
 
-  printBlock.configuratorOpen = function (div, block) {
-    var data = block.controllerSettings.data;
-    printBlock.activeBlock = block;
-    div.innerHTML = '<div id=\'printEditorDiv\' class=\'editorDiv\'>\n          <div id=\'printBlock-editor\'>\n          </div>\n          <div class=\'printBlock-buttons\' y="100%">\n            <div class=\'printBlock-option\' value=\'A\'>\n              <svg id=\'variable-option\' class="svg-clear" width=\'60px\' height=\'40px\' xmlns=\'http://www.w3.org/2000/svg\'></svg>\n            </div>\n            <div class=\'printBlock-option\' value=\'B\'>\n              <span class="svg-clear data-option">' + fastr.data + '</span>\n            </div>\n          </div>\n          <div class="vert-line"></div>\n        </div>';
-    var variableOption = document.getElementById('variable-option');
-    var button = icons.variable(0.9, 4, 1, '');
-    variableOption.appendChild(button);
+	printBlock.configuratorOpen = function (div, block) {
+		var data = block.controllerSettings.data;
+		printBlock.activeBlock = block;
+		div.innerHTML = '<div id=\'printEditorDiv\' class=\'editorDiv\'>\n          <div id=\'printBlock-editor\'>\n          </div>\n          <div class=\'printBlock-buttons\' y="100%">\n            <div class=\'printBlock-option\' value=\'A\'>\n              <svg id=\'variable-option\' class="svg-clear" width=\'60px\' height=\'40px\' xmlns=\'http://www.w3.org/2000/svg\'></svg>\n            </div>\n            <div class=\'printBlock-option\' value=\'B\'>\n              <span class="svg-clear data-option">' + fastr.data + '</span>\n            </div>\n          </div>\n          <div class="vert-line"></div>\n        </div>';
+		var variableOption = document.getElementById('variable-option');
+		var button = icons.variable(0.9, 4, 1, '');
+		variableOption.appendChild(button);
 
-    printBlock.loadSlide(data.button, block);
+		printBlock.loadSlide(data.button, block);
 
-    var selObj = document.getElementById("var-list");
-    var opts = selObj.options;
-    for (var i = 0; i < opts.length; i++) {
-      if (data.print === 'var' && opts[i].value === data.variable) {
-        selObj.selectedIndex = i;
-        break;
-      } else if (data.print === 'sensor' && opts[i].value === data.sensor) {
-        selObj.selectedIndex = i;
-        break;
-      }
-    }
+		var selObj = document.getElementById("var-list");
+		var opts = selObj.options;
+		for (var i = 0; i < opts.length; i++) {
+			if (data.print === 'var' && opts[i].value === data.variable) {
+				selObj.selectedIndex = i;
+				break;
+			} else if (data.print === 'sensor' && opts[i].value === data.sensor) {
+				selObj.selectedIndex = i;
+				break;
+			}
+		}
 
-    interact('.printBlock-option').on('down', function (event) {
-      var button = event.srcElement;
-      var tabs = document.getElementsByClassName('printBlock-option');
-      for (var k = 0; k < tabs.length; k++) {
-        tabs[k].setAttribute('class', 'printBlock-option');
-      }
-      button.classList.add('printBlock-selected');
-      printBlock.loadSlide(button.getAttribute('value'), block);
-    });
-  };
+		interact('.printBlock-option').on('down', function (event) {
+			var button = event.srcElement;
+			var tabs = document.getElementsByClassName('printBlock-option');
+			for (var k = 0; k < tabs.length; k++) {
+				tabs[k].setAttribute('class', 'printBlock-option');
+			}
+			button.classList.add('printBlock-selected');
+			printBlock.loadSlide(button.getAttribute('value'), block);
+		});
+	};
 
-  printBlock.loadSlide = function (buttonName, block) {
-    var editor = document.getElementById('printBlock-editor');
-    var opts = document.getElementsByClassName('printBlock-option');
-    for (var i = 0; i < opts.length; i++) {
-      if (opts[i].getAttribute('value') === buttonName) {
-        opts[i].setAttribute('class', 'printBlock-option printBlock-selected');
-      }
-    }
-    if (buttonName === 'A') {
-      // var
-      block.controllerSettings.data.print = "var";
-      block.controllerSettings.data.button = "A";
-      editor.innerHTML = '<select class="dropdown-comparison printBlock-dropdown" id="var-list">\n      </select>';
+	printBlock.loadSlide = function (buttonName, block) {
+		var editor = document.getElementById('printBlock-editor');
+		var opts = document.getElementsByClassName('printBlock-option');
+		for (var i = 0; i < opts.length; i++) {
+			if (opts[i].getAttribute('value') === buttonName) {
+				opts[i].setAttribute('class', 'printBlock-option printBlock-selected');
+			}
+		}
+		if (buttonName === 'A') {
+			// var
+			block.controllerSettings.data.print = "var";
+			block.controllerSettings.data.button = "A";
+			editor.innerHTML = '<select class="dropdown-comparison printBlock-dropdown" id="var-list">\n      </select>';
 
-      // Add variables to the drop down.
-      var selObj = document.getElementById("var-list");
-      vars.addOptions(selObj, block.controllerSettings.data.variable);
-    } else if (buttonName === 'B') {
-      //sensor
-      block.controllerSettings.data.print = "sensor";
-      block.controllerSettings.data.button = "B";
-      editor.innerHTML = '<select class="dropdown-comparison printBlock-dropdown" id="var-list">\n        <option value="temperature">temperature</option>\n        <option value="accelerometer">accelerometer</option>\n      </select>';
-    }
-  };
+			// Add variables to the drop down.
+			var selObj = document.getElementById("var-list");
+			vars.addOptions(selObj, block.controllerSettings.data.variable);
+		} else if (buttonName === 'B') {
+			//sensor
+			block.controllerSettings.data.print = "sensor";
+			block.controllerSettings.data.button = "B";
+			editor.innerHTML = '<select class="dropdown-comparison printBlock-dropdown" id="var-list">\n        <option value="temperature">temperature</option>\n        <option value="accelerometer">accelerometer</option>\n      </select>';
+		}
+	};
 
-  // Close the identity blocks and clean up hooks related to it.
-  printBlock.configuratorClose = function (div, block) {
-    var selObj = document.getElementById('var-list');
-    var opt = vars.getSelected(selObj);
-    var data = block.controllerSettings.data;
-    if (data.print === 'var') {
-      data.variable = opt;
-    } else if (data.print === 'sensor') {
-      data.sensor = opt;
-    }
-    block.updateSvg();
-    printBlock.activeBlock = null;
-  };
+	// Close the identity blocks and clean up hooks related to it.
+	printBlock.configuratorClose = function (div, block) {
+		var selObj = document.getElementById('var-list');
+		var opt = vars.getSelected(selObj);
+		var data = block.controllerSettings.data;
+		if (data.print === 'var') {
+			data.variable = opt;
+		} else if (data.print === 'sensor') {
+			data.sensor = opt;
+		}
+		// let x = getPrintVal(block.controllerSettings.data);
+		// block.controllerSettings.data.duration = x.toString().length;
 
-  // Buid an SVG for the block that indicates the device name
-  // and connection status
-  printBlock.svg = function (root, block) {
-    var board = icons.pictureNumeric(1, 32, 15);
-    board.setAttribute('text-anchor', 'middle');
-    root.appendChild(board);
+		block.updateSvg();
+		printBlock.activeBlock = null;
+	};
 
-    var print = block.controllerSettings.data.print;
-    if (print === 'var') {
-      var varData = block.controllerSettings.data.variable;
-      var variable = icons.variable(0.5, 32, 52, varData);
-      root.appendChild(variable);
-    } else if (print === 'sensor') {
-      var sensor = block.controllerSettings.data.sensor;
-      if (sensor === 'accelerometer') {
-        var accel = icons.accelerometer(0.50, 'block-stencil-fill svg-clear', 90, 135);
-        root.appendChild(accel);
-      } else if (sensor === 'temperature') {
-        var temp = svgb.createText('fa block-identity-text svg-clear', 90, 160, '\uF2C9');
-        temp.setAttribute('transform', 'scale(0.45)');
-        root.appendChild(temp);
-      }
-    }
-  };
+	// Buid an SVG for the block that indicates the device name
+	// and connection status
+	printBlock.svg = function (root, block) {
+		var board = icons.pictureNumeric(1, 32, 15);
+		board.setAttribute('text-anchor', 'middle');
+		root.appendChild(board);
 
-  return printBlock;
+		var print = block.controllerSettings.data.print;
+		if (print === 'var') {
+			var varData = block.controllerSettings.data.variable;
+			var variable = icons.variable(0.5, 32, 52, varData);
+			root.appendChild(variable);
+		} else if (print === 'sensor') {
+			var sensor = block.controllerSettings.data.sensor;
+			if (sensor === 'accelerometer') {
+				var accel = icons.accelerometer(0.50, 'block-stencil-fill svg-clear', 90, 135);
+				root.appendChild(accel);
+			} else if (sensor === 'temperature') {
+				var temp = svgb.createText('fa block-identity-text svg-clear', 90, 160, '\uF2C9');
+				temp.setAttribute('transform', 'scale(0.45)');
+				root.appendChild(temp);
+			}
+		}
+	};
+	// printBlock.getPrintVal = function (d) {
+	// 	var val = 0;
+	// 	if (d.print === 'var') {
+	// 		console.log('var------');
+	// 		val = variables.get(d.variable);
+	// 	} else if (d.print === 'sensor') {
+	// 		console.log('sensor------');
+	// 		if (d.sensor === 'accelerometer') {
+	// 			val = cxn.accelerometer;
+	// 		} else if (d.sensor === 'temperature') {
+	// 			val = cxn.temperature;
+	// 		}
+	// 	}
+	// 	console.log('conductor print', d.print, d.variable, d.sensor, val);
+	// 	return val;
+	// };
+
+
+	return printBlock;
 }();
 
 },{"./../variables.js":57,"fastr.js":51,"icons.js":52,"interact.js":8,"knockout":9,"svgbuilder.js":55}],27:[function(require,module,exports){
@@ -10536,6 +10556,8 @@ module.exports = function () {
 },{"./keypadTab.js":23,"icons.js":52,"knockout":9,"svgbuilder.js":55}],33:[function(require,module,exports){
 'use strict';
 
+/* eslint-disable max-depth */
+/* eslint-disable complexity */
 /*
 Copyright (c) 2020 Trashbots - SDG
 
@@ -10559,327 +10581,333 @@ SOFTWARE.
 */
 
 module.exports = function () {
-  var log = require('log.js');
-  var conductor = {};
-  var dso = require('./overlays/deviceScanOverlay.js');
-  var dots = require('./overlays/actionDots.js');
-  var cxn = require('./cxn.js');
-  var variables = require('./variables.js');
+	var log = require('log.js');
+	var conductor = {};
+	var dso = require('./overlays/deviceScanOverlay.js');
+	var dots = require('./overlays/actionDots.js');
+	var cxn = require('./cxn.js');
+	var variables = require('./variables.js');
 
-  conductor.cxn = require('./cxn.js');
-  conductor.tbe = null;
-  conductor.hbTimer = 0;
-  conductor.sensorTimer = 0;
-  conductor.runningBlocks = [];
-  conductor.count = null;
-  conductor.defaultPix = '0000000000';
-  conductor.run = false;
-  conductor.soundCount = 0;
+	conductor.cxn = require('./cxn.js');
+	conductor.tbe = null;
+	conductor.hbTimer = 0;
+	conductor.sensorTimer = 0;
+	conductor.runningBlocks = [];
+	conductor.count = null;
+	conductor.defaultPix = '0000000000';
+	conductor.run = false;
+	conductor.soundCount = 0;
 
-  // Once the conductor system is connected to the editor,
-  // it will ping the target device to determine its current state.
-  // Scan the editor looking for identity blocks
+	// Once the conductor system is connected to the editor,
+	// it will ping the target device to determine its current state.
+	// Scan the editor looking for identity blocks
 
-  conductor.activeBits = [];
+	conductor.activeBits = [];
 
-  conductor.attachToScoreEditor = function (tbe) {
-    conductor.tbe = tbe;
-    conductor.linkHeartBeat();
-    conductor.cxn.connectionChanged.subscribe(conductor.updateIndentityBlocks);
-  };
+	conductor.attachToScoreEditor = function (tbe) {
+		conductor.tbe = tbe;
+		conductor.linkHeartBeat();
+		conductor.cxn.connectionChanged.subscribe(conductor.updateIndentityBlocks);
+	};
 
-  // If there is a change in connections update the indentity blocks
-  // TODO this linkage is very much a bit of a hack.
-  conductor.updateIndentityBlocks = function () {
-    var blockChainIterator = conductor.tbe.forEachDiagramChain;
-    blockChainIterator(function (chainStart) {
-      if (chainStart.name.startsWith('identity')) {
-        var botName = dso.deviceName;
-        var status = conductor.cxn.connectionStatus(botName);
-        if (status === conductor.cxn.statusEnum.BEACON) {
-          // Try to connect ot it.
-          conductor.cxn.connect(botName);
-        }
-        chainStart.updateSvg();
-      }
-    });
-  };
+	// If there is a change in connections update the indentity blocks
+	// TODO this linkage is very much a bit of a hack.
+	conductor.updateIndentityBlocks = function () {
+		var blockChainIterator = conductor.tbe.forEachDiagramChain;
+		blockChainIterator(function (chainStart) {
+			if (chainStart.name.startsWith('identity')) {
+				var botName = dso.deviceName;
+				var status = conductor.cxn.connectionStatus(botName);
+				if (status === conductor.cxn.statusEnum.BEACON) {
+					// Try to connect ot it.
+					conductor.cxn.connect(botName);
+				}
+				chainStart.updateSvg();
+			}
+		});
+	};
 
-  conductor.linkHeartBeat = function () {
-    var botName = dso.deviceName;
-    conductor.hbTimer = 0;
-    conductor.cxn.write(botName, '(m:(1 2) d:0);');
+	conductor.linkHeartBeat = function () {
+		var botName = dso.deviceName;
+		conductor.hbTimer = 0;
+		conductor.cxn.write(botName, '(m:(1 2) d:0);');
 
-    // Set all of the blocks to a regular state.
-    conductor.tbe.forEachDiagramBlock(function (b) {
-      b.svgRect.classList.remove('running-block');
-    });
+		// Set all of the blocks to a regular state.
+		conductor.tbe.forEachDiagramBlock(function (b) {
+			b.svgRect.classList.remove('running-block');
+		});
 
-    if (conductor.runningBlocks.length > 0) {
-      for (var i = 0; i < conductor.runningBlocks.length; i++) {
-        var block = conductor.runningBlocks[i];
-        if (block !== null) {
-          if (conductor.loopCount === undefined && block.isLoopHead()) {
-            conductor.loopCount = block.controllerSettings.data.duration;
-          }
+		if (conductor.runningBlocks.length > 0) {
+			for (var i = 0; i < conductor.runningBlocks.length; i++) {
+				var block = conductor.runningBlocks[i];
+				if (block !== null) {
+					if (conductor.loopCount === undefined && block.isLoopHead()) {
+						conductor.loopCount = block.controllerSettings.data.duration;
+					}
 
-          if (block.name === 'tail' && conductor.loopCount > 1) {
-            block = block.flowHead;
-            conductor.loopCount -= 1;
-          } else if (block.name === 'tail' && conductor.loopCount === 1) {
-            conductor.loopCount = undefined;
-            if (block.next !== null) {
-              block = block.next;
-            } else {
-              conductor.stopAll();
-            }
-          }
+					if (block.name === 'tail' && conductor.loopCount > 1) {
+						block = block.flowHead;
+						conductor.loopCount -= 1;
+					} else if (block.name === 'tail' && conductor.loopCount === 1) {
+						conductor.loopCount = undefined;
+						if (block.next !== null) {
+							block = block.next;
+						} else {
+							conductor.stopAll();
+						}
+					}
 
-          if (block !== null && block.name === 'loop') {
-            block = block.next;
-          }
-          // If this is a new block, get its duration
-          if (block.count === null || block.count === undefined) {
-            block.count = block.controllerSettings.data.duration;
-          }
+					if (block !== null && block.name === 'loop') {
+						block = block.next;
+					}
 
-          // If it does not have a duration or it has a duration of 0
-          // then set its duration to 1
-          if (block.count === undefined || block.count === '0') {
-            block.count = 1;
-          }
+					// If this is a new block, get its duration
+					if (block.count === null || block.count === undefined) {
+						// block.count = block.controllerSettings.data.duration;
 
-          if (block !== null) {
-            block.count = parseInt(block.count, 10);
+						if (block.name === 'print') {
+							var x = conductor.getPrintVal(block.controllerSettings.data); //value
+							block.count = x.toString().length; //digits
+						} else {
+							block.count = block.controllerSettings.data.duration;
+						}
+					}
 
-            // Mark the current block as running
-            var id = block.first;
-            if (id.name.startsWith('identity')) {
-              block.moveToFront();
-              block.svgRect.classList.add('running-block');
-            }
+					// If it does not have a duration or it has a duration of 0
+					// then set its duration to 1
+					if (block.count === undefined || block.count === '0') {
+						block.count = 1;
+					}
 
-            // If the block has not played for its entire duration,
-            // continue playing the block.
-            // Otherwise, get the next block ready and set count to null.
-            conductor.playOne(block);
-            if (block.count > 1) {
-              block.count -= 1;
-            } else {
-              conductor.runningBlocks[i] = block.next;
-              block.count = null;
-            }
-          }
-        }
-      }
-    }
-    if (block && block.name === 'print') {
-      var x = conductor.getPrintVal(block.controllerSettings.data); //value
-      var digits = x.toString().length;
-      conductor.hbTimer = setTimeout(function () {
-        conductor.linkHeartBeat();
-      }, digits * 1000);
+					if (block !== null) {
+						block.count = parseInt(block.count, 10);
 
-      // conductor.hbTimer = setTimeout(function() { conductor.linkHeartBeat(); }, 3000);
-    } else {
-      conductor.hbTimer = setTimeout(function () {
-        conductor.linkHeartBeat();
-      }, 1000);
-    }
-  };
+						// Mark the current block as running
+						var id = block.first;
+						if (id.name.startsWith('identity')) {
+							block.moveToFront();
+							block.svgRect.classList.add('running-block');
+						}
 
-  // Find all start all blocks and start them running.
-  conductor.playAll = function () {
-    dots.activate('play', 5);
-    conductor.runningBlocks = [];
-    conductor.run = true;
-    variables.resetVars();
-    var blockChainIterator = conductor.tbe.forEachDiagramChain;
-    blockChainIterator(function (chainStart) {
-      // Ignore chains that don't start with an identity block.
-      if (chainStart.name === 'identity') {
-        conductor.runningBlocks.push(chainStart.next);
-      } else if (chainStart.name === 'identityAccelerometer' || chainStart.name === 'identityButton' || chainStart.name === 'identityTemperature') {
-        //chainStart.controllerSettings.data.run = "yes";
-        cxn.buttonA = null;
-        cxn.buttonB = null;
-        cxn.buttonAB = null;
-        conductor.checkSensorIdentity(chainStart);
-      }
-    });
-  };
+						// If the block has not played for its entire duration,
+						// continue playing the block.
+						// Otherwise, get the next block ready and set count to null.
+						conductor.playOne(block);
+						if (block.count > 1) {
+							block.count -= 1;
+						} else {
+							conductor.runningBlocks[i] = block.next;
+							block.count = null;
+						}
+					}
+				}
+			}
+		}
+		// if (block && block.name === 'print') {
+		// 	let x = conductor.getPrintVal(block.controllerSettings.data); //value
+		// 	let digits = x.toString().length;
+		// 	conductor.hbTimer = setTimeout(function() { conductor.linkHeartBeat(); }, digits*1000);
 
-  conductor.satisfiesStart = function (val, block, error) {
-    var blockValue = parseInt(block.controllerSettings.data.value, 10);
-    if (block.controllerSettings.data.comparison === '<') {
-      return val < blockValue;
-    } else if (block.controllerSettings.data.comparison === '>') {
-      return val > blockValue;
-    } else if (block.controllerSettings.data.comparison === '=') {
-      if (val === blockValue) {
-        return true;
-      } else if (val + error > blockValue && val - error < blockValue) {
-        return true;
-      }
-      return false;
-    }
-    return null;
-  };
+		// 	// conductor.hbTimer = setTimeout(function() { conductor.linkHeartBeat(); }, 3000);
+		// } else {
+		conductor.hbTimer = setTimeout(function () {
+			conductor.linkHeartBeat();
+		}, 1000);
+		// }
+	};
 
-  conductor.runningBlockIsNotInChain = function (block) {
-    while (block !== null) {
-      if (block.svgRect.classList.contains('running-block')) {
-        return false;
-      }
-      block = block.next;
-    }
-    return true;
-  };
+	// Find all start all blocks and start them running.
+	conductor.playAll = function () {
+		dots.activate('play', 5);
+		conductor.runningBlocks = [];
+		conductor.run = true;
+		variables.resetVars();
+		var blockChainIterator = conductor.tbe.forEachDiagramChain;
+		blockChainIterator(function (chainStart) {
+			// Ignore chains that don't start with an identity block.
+			if (chainStart.name === 'identity') {
+				conductor.runningBlocks.push(chainStart.next);
+			} else if (chainStart.name === 'identityAccelerometer' || chainStart.name === 'identityButton' || chainStart.name === 'identityTemperature') {
+				//chainStart.controllerSettings.data.run = "yes";
+				cxn.buttonA = null;
+				cxn.buttonB = null;
+				cxn.buttonAB = null;
+				conductor.checkSensorIdentity(chainStart);
+			}
+		});
+	};
 
-  conductor.checkSensorIdentity = function (block) {
-    conductor.sensorTimer = 0;
-    var data = block.controllerSettings.data;
-    //conductor.cxn.write(dso.deviceName, '(sensor);');
-    if (conductor.run) {
-      if (block.name === 'identityAccelerometer' && cxn.accelerometer !== null) {
-        var accel = cxn.accelerometer;
-        console.log("Accelerometer", accel);
-        if (conductor.satisfiesStart(accel, block, 5) && conductor.runningBlockIsNotInChain(block)) {
-          conductor.runningBlocks.push(block.next);
-        }
-      } else if (block.name === 'identityTemperature' && cxn.temperature !== null) {
-        var temp = cxn.temperature;
-        console.log("Temperature", temp);
-        if (conductor.satisfiesStart(temp, block, 0)) {
-          conductor.runningBlocks.push(block.next);
-        }
-      } else if (block.name === 'identityButton') {
-        //console.log(data.button);
-        if (data.button === 'A' && cxn.buttonA) {
-          conductor.runningBlocks.push(block.next);
-          cxn.buttonA = null;
-        } else if (data.button === 'B' && cxn.buttonB) {
-          conductor.runningBlocks.push(block.next);
-          cxn.buttonB = null;
-        } else if (data.button === 'A+B' && cxn.buttonAB) {
-          conductor.runningBlocks.push(block.next);
-          cxn.buttonAB = null;
-        }
-      }
-    }
-    conductor.sensorTimer = setTimeout(function () {
-      conductor.checkSensorIdentity(block);
-    }, 50);
-  };
+	conductor.satisfiesStart = function (val, block, error) {
+		var blockValue = parseInt(block.controllerSettings.data.value, 10);
+		if (block.controllerSettings.data.comparison === '<') {
+			return val < blockValue;
+		} else if (block.controllerSettings.data.comparison === '>') {
+			return val > blockValue;
+		} else if (block.controllerSettings.data.comparison === '=') {
+			if (val === blockValue) {
+				return true;
+			} else if (val + error > blockValue && val - error < blockValue) {
+				return true;
+			}
+			return false;
+		}
+		return null;
+	};
 
-  // Stop all running chains.
-  conductor.stopAll = function () {
-    dots.activate('play', 0);
-    var blockChainIterator = conductor.tbe.forEachDiagramChain;
-    var botName = '';
-    var message = '(m:(1 2) d:0);';
-    var message2 = '(px:' + conductor.defaultPix + ');';
-    conductor.run = false;
-    blockChainIterator(function (chainStart) {
-      chainStart.svgRect.classList.remove('running-block');
-      // Ignore chains that don't start with an identity block.
-      if (chainStart.name.startsWith('identity')) {
-        botName = dso.deviceName;
-        conductor.cxn.write(botName, message);
-        conductor.cxn.write(botName, message2);
-      }
-    });
-    conductor.count = null;
-    conductor.runningBlocks = [];
-    conductor.soundCount = 0;
-    log.trace('stop all');
-    // Single step, find target and head of chain, and run the single block.
-  };
+	conductor.runningBlockIsNotInChain = function (block) {
+		while (block !== null) {
+			if (block.svgRect.classList.contains('running-block')) {
+				return false;
+			}
+			block = block.next;
+		}
+		return true;
+	};
 
-  conductor.playOne = function (block) {
-    var first = block.first;
+	conductor.checkSensorIdentity = function (block) {
+		conductor.sensorTimer = 0;
+		var data = block.controllerSettings.data;
+		//conductor.cxn.write(dso.deviceName, '(sensor);');
+		if (conductor.run) {
+			if (block.name === 'identityAccelerometer' && cxn.accelerometer !== null) {
+				var accel = cxn.accelerometer;
+				console.log("Accelerometer", accel);
+				if (conductor.satisfiesStart(accel, block, 5) && conductor.runningBlockIsNotInChain(block)) {
+					conductor.runningBlocks.push(block.next);
+				}
+			} else if (block.name === 'identityTemperature' && cxn.temperature !== null) {
+				var temp = cxn.temperature;
+				console.log("Temperature", temp);
+				if (conductor.satisfiesStart(temp, block, 0)) {
+					conductor.runningBlocks.push(block.next);
+				}
+			} else if (block.name === 'identityButton') {
+				//console.log(data.button);
+				if (data.button === 'A' && cxn.buttonA) {
+					conductor.runningBlocks.push(block.next);
+					cxn.buttonA = null;
+				} else if (data.button === 'B' && cxn.buttonB) {
+					conductor.runningBlocks.push(block.next);
+					cxn.buttonB = null;
+				} else if (data.button === 'A+B' && cxn.buttonAB) {
+					conductor.runningBlocks.push(block.next);
+					cxn.buttonAB = null;
+				}
+			}
+		}
+		conductor.sensorTimer = setTimeout(function () {
+			conductor.checkSensorIdentity(block);
+		}, 50);
+	};
 
-    if (first.name.startsWith('identity')) {
-      var botName = dso.deviceName;
-      var message = '';
-      var d = block.controllerSettings.data;
-      if (block.name === 'picture') {
-        var imageData = d.pix;
-        var pixStr = conductor.packPix(imageData);
-        message = '(px:' + pixStr + ':' + 1 + ');';
-      } else if (block.name === 'servo') {
-        message = '(sr:' + 50 + ');';
-      } else if (block.name === 'motor') {
-        message = '(m:' + d.motor + ' d:' + -d.speed + ' b:' + d.duration + ');';
-      } else if (block.name === 'twoMotor') {
-        message = '(m:(1 2) d:' + -d.speed + ');'; // +' b:' + d.duration
-      } else if (block.name === 'sound') {
-        // pass the Solfege index
-        message = '(nt:' + d.s.split(" ")[conductor.soundCount] + ');';
-        if (conductor.soundCount === d.duration - 1) {
-          conductor.soundCount = 0;
-        } else {
-          conductor.soundCount += 1;
-        }
-        console.log('message', message);
-      } else if (block.name === 'wait') {
-        message = '';
-      } else if (block.name === 'variableSet') {
-        variables.set(d.variable, d.value);
-      } else if (block.name === 'variableAdd') {
-        // Decrement is done with negative numbers.
-        variables.func(d.variable, '+', d.value);
-      } else if (block.name === 'print') {
-        var val = conductor.getPrintVal(d);
-        message = '(pr:' + val + ');';
-      }
-      conductor.cxn.write(botName, message);
-    }
-    // variables.printVars();
-    // Single step, find target and head of chain and run the single block.
-  };
+	// Stop all running chains.
+	conductor.stopAll = function () {
+		dots.activate('play', 0);
+		var blockChainIterator = conductor.tbe.forEachDiagramChain;
+		var botName = '';
+		var message = '(m:(1 2) d:0);';
+		var message2 = '(px:' + conductor.defaultPix + ');';
+		conductor.run = false;
+		blockChainIterator(function (chainStart) {
+			chainStart.svgRect.classList.remove('running-block');
+			// Ignore chains that don't start with an identity block.
+			if (chainStart.name.startsWith('identity')) {
+				botName = dso.deviceName;
+				conductor.cxn.write(botName, message);
+				conductor.cxn.write(botName, message2);
+			}
+		});
+		conductor.count = null;
+		conductor.runningBlocks = [];
+		conductor.soundCount = 0;
+		log.trace('stop all');
+		// Single step, find target and head of chain, and run the single block.
+	};
 
-  conductor.getPrintVal = function (d) {
-    var val = 0;
-    if (d.print === 'var') {
-      console.log('var------');
-      val = variables.get(d.variable);
-    } else if (d.print === 'sensor') {
-      console.log('sensor------');
-      if (d.sensor === 'accelerometer') {
-        val = cxn.accelerometer;
-      } else if (d.sensor === 'temperature') {
-        val = cxn.temperature;
-      }
-    }
-    console.log('conductor print', d.print, d.variable, d.sensor, val);
-    return val;
-  };
+	conductor.playOne = function (block) {
+		var first = block.first;
 
-  conductor.playSingleChain = function () {
-    log.trace('play single chain');
-    // The conductor starts one chain (part of the score).
-  };
+		if (first.name.startsWith('identity')) {
+			var botName = dso.deviceName;
+			var message = '';
+			var d = block.controllerSettings.data;
+			if (block.name === 'picture') {
+				var imageData = d.pix;
+				var pixStr = conductor.packPix(imageData);
+				message = '(px:' + pixStr + ':' + 1 + ');';
+			} else if (block.name === 'servo') {
+				message = '(sr:' + 50 + ');';
+			} else if (block.name === 'motor') {
+				message = '(m:' + d.motor + ' d:' + -d.speed + ' b:' + d.duration + ');';
+			} else if (block.name === 'twoMotor') {
+				message = '(m:(1 2) d:' + -d.speed + ');'; // +' b:' + d.duration
+			} else if (block.name === 'sound') {
+				// pass the Solfege index
+				message = '(nt:' + d.s.split(" ")[conductor.soundCount] + ');';
+				if (conductor.soundCount === d.duration - 1) {
+					conductor.soundCount = 0;
+				} else {
+					conductor.soundCount += 1;
+				}
+				console.log('message', message);
+			} else if (block.name === 'wait') {
+				message = '';
+			} else if (block.name === 'variableSet') {
+				variables.set(d.variable, d.value);
+			} else if (block.name === 'variableAdd') {
+				// Decrement is done with negative numbers.
+				variables.func(d.variable, '+', d.value);
+			} else if (block.name === 'print') {
+				var val = conductor.getPrintVal(d);
+				message = '(pr:' + val + ');';
+			}
+			conductor.cxn.write(botName, message);
+		}
+		// variables.printVars();
+		// Single step, find target and head of chain and run the single block.
+	};
 
-  conductor.packPix = function (imageData) {
-    var pixStr = '';
-    for (var i = 0; i < 5; i++) {
-      var value = 0;
-      for (var j = 0; j < 5; j++) {
-        value *= 2;
-        if (imageData[i * 5 + j] !== 0) {
-          value += 1;
-        }
-      }
-      var str = value.toString(16);
-      if (str.length === 1) {
-        str = '0' + str;
-      }
-      pixStr += str;
-    }
-    return pixStr;
-  };
-  return conductor;
+	conductor.getPrintVal = function (d) {
+		var val = 0;
+		if (d.print === 'var') {
+			console.log('var------');
+			val = variables.get(d.variable);
+		} else if (d.print === 'sensor') {
+			console.log('sensor------');
+			if (d.sensor === 'accelerometer') {
+				val = cxn.accelerometer;
+			} else if (d.sensor === 'temperature') {
+				val = cxn.temperature;
+			}
+		}
+		console.log('conductor print', d.print, d.variable, d.sensor, val);
+		return val;
+	};
+
+	conductor.playSingleChain = function () {
+		log.trace('play single chain');
+		// The conductor starts one chain (part of the score).
+	};
+
+	conductor.packPix = function (imageData) {
+		var pixStr = '';
+		for (var i = 0; i < 5; i++) {
+			var value = 0;
+			for (var j = 0; j < 5; j++) {
+				value *= 2;
+				if (imageData[i * 5 + j] !== 0) {
+					value += 1;
+				}
+			}
+			var str = value.toString(16);
+			if (str.length === 1) {
+				str = '0' + str;
+			}
+			pixStr += str;
+		}
+		return pixStr;
+	};
+	return conductor;
 }();
 
 },{"./cxn.js":34,"./overlays/actionDots.js":38,"./overlays/deviceScanOverlay.js":41,"./variables.js":57,"log.js":53}],34:[function(require,module,exports){
@@ -11313,7 +11341,6 @@ module.exports = function factory() {
       } else if (str.includes('vs')) {
         cxn.versionNumber = str.substring(4, str.length - 1);
         console.log('version number:', cxn.versionNumber);
-        cxn.write(name, '(vr)');
       } else if (str.includes('bt')) {
         cxn.batteryPercent = str.substring(4, str.length - 1);
       } else if (str.includes('cs')) {
@@ -12526,9 +12553,9 @@ module.exports = function () {
       dso.watch = null;
     }
 
-    //var botName = dso.deviceName;
-    //var message = '(vs)';
-    //cxn.write(botName, message);
+    var botName = dso.deviceName;
+    var message = '(vs)';
+    cxn.write(botName, message);
   };
 
   dso.tryConnect = function (tb) {
