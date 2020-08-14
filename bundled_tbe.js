@@ -10628,6 +10628,7 @@ module.exports = function () {
 	};
 
 	conductor.linkHeartBeat = function () {
+		var duration = 1000;
 		var botName = dso.deviceName;
 		conductor.hbTimer = 0;
 		conductor.cxn.write(botName, '(m:(1 2) d:0);');
@@ -10662,15 +10663,20 @@ module.exports = function () {
 					}
 
 					// If this is a new block, get its duration
-					if (block.count === null || block.count === undefined) {
-						// block.count = block.controllerSettings.data.duration;
 
-						if (block.name === 'print') {
-							var x = conductor.getPrintVal(block.controllerSettings.data); //value
-							block.count = x.toString().length; //digits
-						} else {
-							block.count = block.controllerSettings.data.duration;
-						}
+					if (block.name === 'print') {
+						var x = conductor.getPrintVal(block.controllerSettings.data); //value
+						duration = x.toString().length * 1000; //digits * 1000
+					}
+					if (block.count === null || block.count === undefined) {
+						block.count = block.controllerSettings.data.duration;
+
+						// if (block.name === 'print') {
+						// 	let x = conductor.getPrintVal(block.controllerSettings.data); //value
+						// 	block.count = x.toString().length; //digits
+						// } else {
+						// 	block.count = block.controllerSettings.data.duration;
+						// }
 					}
 
 					// If it does not have a duration or it has a duration of 0
@@ -10712,7 +10718,7 @@ module.exports = function () {
 		// } else {
 		conductor.hbTimer = setTimeout(function () {
 			conductor.linkHeartBeat();
-		}, 1000);
+		}, duration);
 		// }
 	};
 
@@ -11638,14 +11644,6 @@ if (!app.isRegularBrowser) {
 	if (isMobile) {
 		// Build the HTML for mobile overlay without animation
 		overlays.insertHTML('\n\t\t\t<div id=\'mobileOverlay\'>\n\t\t\t\t<div id=\'mobileDialog\'>\n\t\t\t\t<h1 style = "text-align:center">You are on a mobile Device</h1>\n\t\t\t\t\t<div style = "text-align:center;">\n\t\t\t\t\t\tConsider using our mobile app: <a href = "https://tblocks.app.link">TBlocks</a>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>');
-		var regularWebsite = document.getElementById("regularWebsite");
-		regularWebsite.onclick = function () {
-			overlays.currentIsClosing = true;
-			document.getElementById("mobileOverlay").style.display = "none";
-			overlays.overlayShell.classList.add('fullScreenSlideOut');
-			app.isCordovaApp = false;
-			app.start();
-		};
 	} else {
 		app.isCordovaApp = false;
 		app.start();
